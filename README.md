@@ -81,4 +81,4 @@ pip install -r requirements.txt
 
 ---
 
-*Desarrollado por [Ivan Bohorquez*]()
+*Desarrollado por [Ivan Bohorquez*](https://github.com/IvanBohorquez21)
