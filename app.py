@@ -29,7 +29,11 @@ class SignalClassifier(nn.Module):
         return self.fc2(x)
 
 # --- 2. CONFIGURACIÓN DE PÁGINA ---
-st.set_page_config(page_title="RF Classifier Dashboard", layout="wide")
+st.set_page_config(
+    page_title="RF Classifier Dashboard", 
+    page_icon="📡", # Aquí pones el emoji que prefieras
+    layout="wide"
+)
 
 # Estilo CSS para mejorar la estética de los contenedores
 st.markdown("""
