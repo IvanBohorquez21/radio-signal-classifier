@@ -32,26 +32,31 @@ class SignalClassifier(nn.Module):
 st.set_page_config(page_title="RF Classifier Dashboard", layout="wide")
 st.title("📡 Dashboard de Clasificación de Señales RF (V3)")
 
-# --- 3. CARGA DE ACTIVOS ---
+# --- 3. CARGA DE ACTIVOS (Rutas Optimizadas para Cloud) ---
 @st.cache_resource
 def load_assets():
-    posibles_datos = ["data/processed/RML2016_limpio.pt", "../data/processed/RML2016_limpio.pt"]
-    posibles_modelos = ["models/signal_model_v3.pth", "../models/signal_model_v3.pth"]
+    # En Streamlit Cloud, las rutas son relativas a la raíz del repo
+    data_path = "data/processed/RML2016_limpio.pt"
+    model_path = "models/signal_model_v3.pth"
     
-    data_path = next((f for f in posibles_datos if os.path.exists(f)), None)
-    model_path = next((f for f in posibles_modelos if os.path.exists(f)), None)
-    
-    if not data_path or not model_path:
+    # Verificación de existencia para evitar errores silenciosos
+    if not os.path.exists(data_path) or not os.path.exists(model_path):
         return None
         
-    checkpoint = torch.load(data_path, map_location=torch.device('cpu'))
-    weights = torch.load(model_path, map_location=torch.device('cpu'))
-    return {"checkpoint": checkpoint, "weights": weights}
+    try:
+        # Cargamos siempre en CPU para el servidor
+        checkpoint = torch.load(data_path, map_location=torch.device('cpu'))
+        weights = torch.load(model_path, map_location=torch.device('cpu'))
+        return {"checkpoint": checkpoint, "weights": weights}
+    except Exception as e:
+        st.error(f"Error al cargar archivos: {e}")
+        return None
 
 assets = load_assets()
 
 if assets is None:
-    st.error("❌ No se encontraron los archivos. Verifica 'data/processed/RML2016_limpio.pt' y 'models/signal_model_v3.pth'.")
+    st.error("❌ No se encontraron los archivos necesarios.")
+    st.info("Asegúrate de que 'data/processed/RML2016_limpio.pt' y 'models/signal_model_v3.pth' estén en tu repositorio de GitHub.")
 else:
     X = assets['checkpoint']['X']
     lbl = assets['checkpoint']['lbl']
@@ -118,3 +123,4 @@ else:
     with st.expander("Detalles Técnicos"):
         st.write(f"Clase Real ID: `{lbl[idx]}`")
         st.write(f"Probabilidad Máxima: `{np.max(probs):.4f}`")
+        st.write(f"Ruta de datos: `{os.path.abspath('data/processed/RML2016_limpio.pt')}`")
