@@ -4,8 +4,8 @@ venv/
 .env
 
 # Datos pesados (No se suben a GitHub)
-data/raw/*.pkl
-data/processed/*.pt
+data/raw/
+*.pkl
 
 # Archivos temporales de Python
 __pycache__/
