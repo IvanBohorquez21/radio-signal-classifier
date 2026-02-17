@@ -88,7 +88,7 @@ else:
         - **BatchNorm:** Normalización de activaciones.
         - **Conv2D (64):** Reducción de dimensionalidad y abstracción.
         - **Dropout (0.5):** Regularización para evitar sobreajuste.
-        - **Softmax:** Clasificación en 11 tipos de modulación.
+        - **Softmax:** Clasificación en 10 tipos de modulación.
         """)
     
     st.sidebar.divider()
