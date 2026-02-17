@@ -31,11 +31,12 @@ class SignalClassifier(nn.Module):
 # --- 2. CONFIGURACIÓN DE PÁGINA ---
 st.set_page_config(page_title="RF Classifier Dashboard", layout="wide")
 
-# Estilo CSS extra para mejorar la estética oscura
+# Estilo CSS para mejorar la estética de los contenedores
 st.markdown("""
     <style>
     .stMetric { background-color: #1e2530; padding: 15px; border-radius: 10px; border: 1px solid #30363d; }
     .stAlert { border-radius: 10px; }
+    [data-testid="stSidebar"] { background-color: #161b22; }
     </style>
     """, unsafe_allow_html=True)
 
@@ -44,7 +45,6 @@ st.title("📡 Dashboard de Clasificación de Señales RF")
 # --- 3. CARGA DE ACTIVOS ---
 @st.cache_resource
 def load_assets():
-    # Rutas flexibles para local y cloud
     data_path = "data/processed/RML2016_limpio.pt"
     model_path = "models/signal_model_v3.pth"
     
@@ -62,15 +62,13 @@ def load_assets():
 assets = load_assets()
 
 if assets is None:
-    st.error("❌ No se encontraron los archivos en el repositorio.")
-    st.info("Ruta buscada: data/processed/RML2016_limpio.pt")
+    st.error("❌ No se encontraron los archivos necesarios en el repositorio.")
+    st.info("Asegúrate de que 'data/processed/RML2016_limpio.pt' esté en GitHub.")
 else:
-    # Extraer datos
     X = assets['checkpoint']['X']
     lbl = assets['checkpoint']['lbl']
     mods = assets['checkpoint']['mods']
     
-    # Cargar Modelo
     model = SignalClassifier(num_classes=len(mods))
     model.load_state_dict(assets['weights'])
     model.eval()
@@ -78,10 +76,25 @@ else:
     # --- 4. BARRA LATERAL ---
     st.sidebar.header("🕹️ Control de Señal")
     idx = st.sidebar.slider("Seleccionar índice de muestra", 0, len(X)-1, 100)
+    
+    # Explicación de la Arquitectura
+    with st.sidebar.expander("🔬 Detalles de la Arquitectura"):
+        st.markdown("""
+        **CNN SignalClassifier V3**
+        Esta red procesa señales I/Q de 2 canales x 128 muestras.
+        
+        **Capas:**
+        - **Conv2D (128):** Filtros de 1x7 para extraer patrones temporales.
+        - **BatchNorm:** Normalización de activaciones.
+        - **Conv2D (64):** Reducción de dimensionalidad y abstracción.
+        - **Dropout (0.5):** Regularización para evitar sobreajuste.
+        - **Softmax:** Clasificación en 11 tipos de modulación.
+        """)
+    
     st.sidebar.divider()
-    st.sidebar.info(f"Total de muestras disponibles: {len(X)}")
+    st.sidebar.info(f"Total de muestras: {len(X)}")
 
-    # --- 5. INFERENCIA Y VISUALIZACIÓN ---
+    # --- 5. PROCESAMIENTO E INFERENCIA ---
     signal = X[idx]
     with torch.no_grad():
         output = model(signal.unsqueeze(0))
@@ -94,13 +107,16 @@ else:
     with col1:
         st.subheader("📊 Dominio del Tiempo (I/Q)")
         fig_time, ax_time = plt.subplots(figsize=(7, ALTURA))
-        # Forzamos fondo blanco en el gráfico para que se vea claro
-        fig_time.patch.set_facecolor('white') 
+        fig_time.patch.set_facecolor('white') # Fondo claro para contraste
+        
         ax_time.plot(signal[0], label="Fase (I)", color="#1f77b4", lw=1.5)
         ax_time.plot(signal[1], label="Cuadratura (Q)", color="#ff7f0e", lw=1.5)
         ax_time.set_title(f"Clase Real: {mods[lbl[idx]]}", fontweight='bold')
+        ax_time.set_xlabel("Muestras")
+        ax_time.set_ylabel("Amplitud")
         ax_time.legend(loc='upper right')
         ax_time.grid(True, alpha=0.3)
+        fig_time.tight_layout()
         st.pyplot(fig_time, use_container_width=True)
 
     with col2:
@@ -108,12 +124,12 @@ else:
         fig_prob, ax_prob = plt.subplots(figsize=(7, ALTURA))
         fig_prob.patch.set_facecolor('white')
         
-        # Colores de barras
         colors = ['#2ca02c' if i == pred_idx else '#aec7e8' for i in range(len(mods))]
         ax_prob.barh(mods, probs, color=colors)
         ax_prob.set_xlim(0, 1.0)
         ax_prob.set_title(f"Predicho: {mods[pred_idx]} ({probs[pred_idx]*100:.1f}%)", fontweight='bold')
-        plt.tight_layout()
+        ax_prob.set_xlabel("Confianza")
+        fig_prob.tight_layout()
         st.pyplot(fig_prob, use_container_width=True)
 
     # --- 6. PANEL DE RESULTADOS ---
@@ -132,6 +148,6 @@ else:
         else:
             st.error(f"### ❌ Error de Clasificación: Predicho **{mods[pred_idx]}** vs Real **{mods[lbl[idx]]}**")
 
-    with st.expander("🔍 Ver detalles del vector de entrada"):
-        st.write("Datos del Tensor (Normalizados):")
-        st.dataframe(signal.numpy())
+    with st.expander("🔍 Ver detalles del vector de entrada (Tensores)"):
+        st.write("Muestra procesada del dataset:")
+        st.dataframe(signal.numpy(), use_container_width=True)
