@@ -32,6 +32,7 @@ El modelo fue entrenado durante 60 épocas, logrando una convergencia estable co
 
 ## 📊 Resultados
 El rendimiento del modelo se evalúa mediante una matriz de confusión normalizada, que permite identificar la precisión del clasificador para cada tipo de señal, incluso en entornos con ruido.
+
 ![Matriz de Confusión](img/matriz_confusion_v3.png)
 
 ### Demos de Predicción en Tiempo Real
