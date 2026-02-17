@@ -34,7 +34,7 @@ Antes del entrenamiento, el sistema procesa y limpia los datos, permitiendo visu
 
 
 ## 🏋️‍♂️🤖 Entrenamiento
-Primero se limpian los datos, en este caso al ser señales electricas se puede tomar un criterio de umbral de ruido donde el SNS(dB) sugerido aceptable es un rango de (15dB - 20 dB) para ellos eliminamos todas las frecuencias que estan pordebajo de 20 dB ya que para efectos practicos se tomaran como ruido,en este rango se suele utilizar para las modulaciones de radio frecuencia de baja velocidad.
+Primero se limpian los datos, en este caso al ser señales electricas se puede tomar un criterio de umbral de ruido donde la relación Señal-Ruido SNR(dB) sugerido aceptable es un rango de (15dB - 20 dB) para ello eliminamos todas las frecuencias que estan pordebajo de 20 dB ya que para efectos practicos se tomaran como ruido,en este rango se suele utilizar para las modulaciones de radio frecuencia de baja velocidad.
 
 ![ejemplo 1](img/ejemplo_8PSK.png)
 
