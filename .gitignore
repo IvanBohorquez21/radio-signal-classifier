@@ -1,0 +1,16 @@
+# Entornos virtuales
+env_ia/
+venv/
+.env
+
+# Datos pesados (No se suben a GitHub)
+data/raw/*.pkl
+data/processed/*.pt
+
+# Archivos temporales de Python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Otros
+.DS_Store
