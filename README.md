@@ -2,6 +2,23 @@
 
 Este proyecto utiliza una Red Neuronal Convolucional **(CNN)** desarrollada en PyTorch para identificar y clasificar automáticamente 10 tipos de modulaciones de radio (AMC). Se utiliza el dataset estándar de la industria RML2016.10a, procesando señales en cuadratura (I/Q) para entender el comportamiento de la radiofrecuencia mediante Inteligencia Artificial.
 
+## 🛠️ Tecnologías y Herramientas
+
+Este proyecto fue desarrollado utilizando un stack tecnológico moderno enfocado en Ciencia de Datos y Deep Learning:
+
+* **Framework de Deep Learning:** ![PyTorch](https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=flat&logo=PyTorch&logoColor=white)
+    * Implementación de Redes Neuronales Convolucionales (**CNN**).
+    * Aceleración por hardware mediante **CUDA** (NVIDIA RTX 4060).
+* **Procesamiento de Señales y Datos:** ![NumPy](https://img.shields.io/badge/numpy-%23013243.svg?style=flat&logo=numpy&logoColor=white) ![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=flat&logo=pandas&logoColor=white)
+    * Manipulación de tensores y señales complejas (I/Q).
+    * Filtrado de Relación Señal-Ruido (**SNR**) y pre-procesamiento de datos.
+* **Visualización Científica:** ![Matplotlib](https://img.shields.io/badge/Matplotlib-%23ffffff.svg?style=flat&logo=Matplotlib&logoColor=black)
+    * Gráficas en el dominio del tiempo, curvas de aprendizaje y matrices de confusión.
+* **Entorno de Desarrollo:** ![Jupyter Notebook](https://img.shields.io/badge/jupyter-%23FA0F00.svg?style=flat&logo=jupyter&logoColor=white) ![VS Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=flat&logo=visual-studio-code&logoColor=white)
+    * Flujo de trabajo interactivo dividido en etapas de experimentación y producción.
+* **Métricas de Evaluación:** ![Scikit-Learn](https://img.shields.io/badge/scikit--learn-%23F7931E.svg?style=flat&logo=scikit-learn&logoColor=white)
+    * Análisis de precisión, **F1-Score** y **Recall** por clase.
+
 ## 🧠 Arquitectura y Entrenamiento
 
 El modelo procesa señales representadas como tensores de entrada de tamaño (2, 128), correspondientes a los componentes en fase (I) y cuadratura (Q).
