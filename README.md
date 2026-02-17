@@ -11,7 +11,7 @@ Antes del entrenamiento, el sistema procesa y limpia los datos, permitiendo visu
 
 | 8PSK (Digital) | CPFSK (Digital) |
 | --- | --- |
-|  |  |
+
 
 
 
